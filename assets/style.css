@@ -271,7 +271,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .sec-eyebrow { font-size: 1.3rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--olive); margin-bottom: .9rem; }
 .sec-title {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: clamp(2.1rem, 4.6vw, 3.2rem);
   line-height: 1.12;
   letter-spacing: -.01em;
@@ -281,7 +281,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .sec-note { margin-top: 1.4rem; max-width: 780px; color: var(--text-soft); font-size: 1.05rem; }
 .sub-head {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.4rem;
   color: var(--ink);
   margin: 3.2rem 0 1.6rem;
