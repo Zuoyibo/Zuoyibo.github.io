@@ -219,6 +219,22 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .hero-hit:hover, .hero-hit:focus-visible { background: rgba(255,255,255,.1); }
 .hero-hit:focus-visible { outline: 1px solid rgba(243,239,222,.6); outline-offset: 2px; }
 
+/* Visible fallback buttons (mobile breakpoint / EN mode, activated below) */
+.hero-cta-mobile {
+  margin-top: 2.6rem; display: none; gap: 1rem; flex-wrap: wrap;
+}
+.hero-cta-mobile a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  padding: .9rem 1.8rem;
+  border-radius: 3px;
+}
+.hero-cta-mobile a:first-child { background: var(--brand); color: var(--cream); border: 1px solid var(--brand); }
+.hero-cta-mobile a:last-child { border: 1px solid rgba(243,239,222,.4); color: var(--cream); }
+
 .hero-inner {
   position: relative;
   z-index: 2;
@@ -521,12 +537,17 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
      restore the live text as real, visible, independently-laid-out HTML
      (not tied to the image's crop), with its own scrim and styled buttons,
      and hide the image-positioned hit-area overlay. */
+  /* Content taller than the viewport combined with .hero's flex
+     align-items:center pushes the bottom (the buttons) out of the initial
+     view instead of just letting the page scroll — align to the top and
+     drop min-height so the hero is exactly as tall as its content here. */
+  .hero { align-items: flex-start; min-height: 0; }
   .hero-inner {
     position: relative !important;
     width: 100% !important; height: auto !important;
     max-width: 1140px;
     margin: 0 auto !important;
-    padding: 7rem 1.5rem 5rem !important;
+    padding: 6rem 1.5rem 3rem !important;
     overflow: visible !important;
     clip: auto !important;
     white-space: normal !important;
@@ -541,6 +562,11 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   }
   .hero-cta-overlay { display: none; }
   .hero-cta-mobile { display: flex; }
+  /* .hero-scroll is pinned to the hero's own bottom edge, which made sense
+     when the hero was always a full-viewport-tall block; now that mobile
+     sizes the hero to its (shorter) content, that pin lands on top of the
+     buttons instead of below them. The cue is a desktop affordance anyway. */
+  .hero-scroll { display: none; }
 }
 /* hero-cover.jpg has no English variant of its baked-in text, so EN mode
    always uses the live fallback too, regardless of viewport width. */
@@ -564,20 +590,6 @@ body[data-lang="en"] .hero-inner::before {
 }
 body[data-lang="en"] .hero-cta-overlay { display: none; }
 body[data-lang="en"] .hero-cta-mobile { display: flex; }
-.hero-cta-mobile {
-  margin-top: 2.6rem; display: none; gap: 1rem; flex-wrap: wrap;
-}
-.hero-cta-mobile a {
-  display: inline-block;
-  text-decoration: none;
-  font-size: .95rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  padding: .9rem 1.8rem;
-  border-radius: 3px;
-}
-.hero-cta-mobile a:first-child { background: var(--brand); color: var(--cream); border: 1px solid var(--brand); }
-.hero-cta-mobile a:last-child { border: 1px solid rgba(243,239,222,.4); color: var(--cream); }
 @media (max-width: 560px) {
   .about-facts li { grid-template-columns: 1fr; gap: .2rem; }
   .nav-links a[href="#projects"], .nav-links a[href="#honors"] { display: none; }
