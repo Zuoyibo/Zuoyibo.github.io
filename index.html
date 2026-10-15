@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://zuoyibo.github.io/assets/img/avatar.jpg">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="10" fill="%236B4423"/%3E%3Ctext x="32" y="44" font-size="34" text-anchor="middle" fill="%23F3EEE3" font-family="serif" font-weight="bold"%3E左%3C/text%3E%3C/svg%3E'>
-<link rel="stylesheet" href="assets/style.css?v=20">
+<link rel="stylesheet" href="assets/style.css?v=21">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -71,66 +71,70 @@
     <svg viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <defs>
         <filter id="fxGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
           <feMerge>
             <feMergeNode in="blur"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
+        <linearGradient id="fxArcGradA" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#3fd0ff" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#3fd0ff" stop-opacity=".6"/>
+          <stop offset="100%" stop-color="#3fd0ff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="fxArcGradB" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffbf5e" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#ffbf5e" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#ffbf5e" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="fxScanClip"><rect x="1430" y="505" width="200" height="54" rx="4"/></clipPath>
       </defs>
 
-      <!-- Firm internationalization: packets traveling along flight-path arcs -->
+      <!-- Firm internationalization: glowing flight paths with traveling packets -->
       <g filter="url(#fxGlow)">
-        <path id="fxOrbitA" d="M 40,780 C 480,600 880,430 1205,150" fill="none" stroke="none"/>
-        <path id="fxOrbitB" d="M 1160,230 C 1340,470 1480,650 1610,840" fill="none" stroke="none"/>
-        <path id="fxOrbitC" d="M 1430,40 C 1260,160 1150,210 1050,340" fill="none" stroke="none"/>
-        <circle class="fx-dot fx-dot-cyan" r="5">
-          <animateMotion dur="7s" repeatCount="indefinite">
+        <path id="fxOrbitA" d="M 1445,505 Q 1340,330 1340,140" class="fx-arc-line fx-arc-cyan"/>
+        <path id="fxOrbitB" d="M 1480,560 Q 1540,700 1600,880" class="fx-arc-line fx-arc-amber" style="animation-delay:.6s"/>
+        <circle class="fx-dot fx-dot-cyan" r="4.5">
+          <animateMotion dur="6.5s" repeatCount="indefinite">
             <mpath href="#fxOrbitA" xlink:href="#fxOrbitA"/>
           </animateMotion>
         </circle>
-        <circle class="fx-dot fx-dot-green" r="4">
-          <animateMotion dur="5.5s" repeatCount="indefinite" begin="1.4s">
+        <circle class="fx-dot fx-dot-amber" r="4">
+          <animateMotion dur="6s" repeatCount="indefinite" begin="1.2s">
             <mpath href="#fxOrbitB" xlink:href="#fxOrbitB"/>
           </animateMotion>
         </circle>
-        <circle class="fx-dot fx-dot-violet" r="4">
-          <animateMotion dur="6.5s" repeatCount="indefinite" begin=".6s">
-            <mpath href="#fxOrbitC" xlink:href="#fxOrbitC"/>
-          </animateMotion>
-        </circle>
       </g>
 
-      <!-- AI / LLM: pulsing neural network -->
+      <!-- AI / LLM: hub-and-spoke pulsing network -->
       <g class="fx-neural" filter="url(#fxGlow)">
-        <line x1="910" y1="330" x2="1012" y2="278" class="fx-line" style="animation-delay:0s"/>
-        <line x1="1012" y1="278" x2="1108" y2="350" class="fx-line" style="animation-delay:.3s"/>
-        <line x1="910" y1="330" x2="968" y2="432" class="fx-line" style="animation-delay:.6s"/>
-        <line x1="968" y1="432" x2="1108" y2="350" class="fx-line" style="animation-delay:.9s"/>
-        <line x1="1012" y1="278" x2="968" y2="432" class="fx-line" style="animation-delay:1.2s"/>
-        <line x1="1108" y1="350" x2="1180" y2="300" class="fx-line" style="animation-delay:1.5s"/>
-        <circle cx="910" cy="330" r="5" class="fx-node" style="animation-delay:0s"/>
-        <circle cx="1012" cy="278" r="5" class="fx-node" style="animation-delay:.35s"/>
-        <circle cx="1108" cy="350" r="5" class="fx-node" style="animation-delay:.7s"/>
-        <circle cx="968" cy="432" r="5" class="fx-node" style="animation-delay:1.05s"/>
-        <circle cx="1180" cy="300" r="4" class="fx-node" style="animation-delay:1.4s"/>
+        <line x1="1230" y1="260" x2="1185" y2="215" class="fx-spoke" style="animation-delay:0s"/>
+        <line x1="1230" y1="260" x2="1285" y2="215" class="fx-spoke" style="animation-delay:.4s"/>
+        <line x1="1230" y1="260" x2="1185" y2="315" class="fx-spoke" style="animation-delay:.8s"/>
+        <line x1="1230" y1="260" x2="1285" y2="315" class="fx-spoke" style="animation-delay:1.2s"/>
+        <circle cx="1185" cy="215" r="4" class="fx-node" style="animation-delay:0s"/>
+        <circle cx="1285" cy="215" r="4" class="fx-node" style="animation-delay:.4s"/>
+        <circle cx="1185" cy="315" r="4" class="fx-node" style="animation-delay:.8s"/>
+        <circle cx="1285" cy="315" r="4" class="fx-node" style="animation-delay:1.2s"/>
+        <circle cx="1230" cy="260" r="7" class="fx-core"/>
+        <circle cx="1230" cy="260" r="7" class="fx-core-ring"/>
       </g>
 
-      <!-- Industrial policy: glowing growth bars -->
-      <g class="fx-bars" filter="url(#fxGlow)">
-        <rect x="1328" y="700" width="13" height="241" class="fx-bar" style="animation-delay:0s"/>
-        <rect x="1378" y="615" width="13" height="326" class="fx-bar" style="animation-delay:.25s"/>
-        <rect x="1428" y="575" width="13" height="366" class="fx-bar" style="animation-delay:.5s"/>
-        <rect x="1478" y="655" width="13" height="286" class="fx-bar" style="animation-delay:.75s"/>
-        <rect x="1528" y="600" width="13" height="341" class="fx-bar" style="animation-delay:1s"/>
-        <rect x="1578" y="660" width="13" height="281" class="fx-bar" style="animation-delay:1.25s"/>
+      <!-- Industrial policy: scanning a policy document (LLM reading policy text) -->
+      <g class="fx-scan" filter="url(#fxGlow)">
+        <rect x="1430" y="505" width="200" height="54" rx="4" class="fx-scan-frame"/>
+        <path d="M1430,516 v-11 h11" class="fx-scan-corner"/>
+        <path d="M1619,516 v-11 h-11" class="fx-scan-corner"/>
+        <path d="M1430,548 v11 h11" class="fx-scan-corner"/>
+        <path d="M1619,548 v11 h-11" class="fx-scan-corner"/>
+        <line x1="1430" y1="505" x2="1630" y2="505" class="fx-scan-beam" clip-path="url(#fxScanClip)"/>
       </g>
 
       <!-- Innovation: radiating spark -->
       <g class="fx-spark">
-        <circle cx="565" cy="205" r="5" class="fx-spark-core"/>
-        <circle cx="565" cy="205" r="5" class="fx-spark-ring"/>
-        <circle cx="565" cy="205" r="5" class="fx-spark-ring fx-ring-delay"/>
+        <circle cx="1420" cy="55" r="5" class="fx-spark-core"/>
+        <circle cx="1420" cy="55" r="5" class="fx-spark-ring"/>
+        <circle cx="1420" cy="55" r="5" class="fx-spark-ring fx-ring-delay"/>
       </g>
     </svg>
   </div>
