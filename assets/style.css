@@ -359,7 +359,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 
 /* ══════════ RESEARCH ══════════ */
 .research { background: transparent; }
-.wp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
+.wp-grid { display: grid; grid-template-columns: 1fr; gap: 1.6rem; }
 .paper-card {
   position: relative;
   background: var(--paper-3);
@@ -411,7 +411,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .tag-strong { font-weight: 700; }
 
 /* work in progress */
-.wip-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
+.wip-list { list-style: none; display: grid; grid-template-columns: 1fr; gap: 1.6rem; }
 .wip-list li {
   position: relative;
   background: var(--paper-3);
@@ -458,7 +458,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 
 /* ══════════ HONORS ══════════ */
 .honors { background: transparent; }
-.honors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.honors-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
 .honors-list { list-style: none; }
 .honors-list li { padding: 1rem 0; border-top: 1px solid var(--olive-line); display: flex; flex-direction: column; gap: .35rem; font-size: 1rem; }
 .honors-list strong { font-family: var(--font-display); font-size: 1.02rem; color: var(--ink); font-weight: 600; }
