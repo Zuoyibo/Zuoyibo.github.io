@@ -174,17 +174,33 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   background-position: center right;
   background-size: cover;
 }
-/* Vignette: fully hide the baked-in mockup text/UI over the area the real
-   name/tagline/desc/buttons/nav sit on, while keeping the map/arcs area
-   (right two-thirds) at full richness. */
+/* Nav/button safety bars: full-width, since the nav and scroll-cue span
+   the whole hero regardless of the centered text column below. */
 .hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--ink) 0%, var(--ink) 66%, transparent 75%),
     linear-gradient(180deg, var(--ink) 0, var(--ink) 90px, transparent 170px),
     linear-gradient(0deg, var(--ink) 0, var(--ink) 150px, transparent 250px);
+}
+/* Text-safety mask: a pixel mask baked in hero-cover.jpg's own 1774x887
+   coordinate space (solid over where that image's own text/UI pixels are,
+   fading out beyond), sized with the exact same background-size:cover;
+   background-position:center right as .hero-bg. Because it goes through
+   the identical cover-fit transform, it tracks the backdrop image's own
+   content at any viewport size — unlike a mask sized from .hero-inner's
+   independently-centered CSS box, which only coincidentally lined up at
+   one viewport width and left gaps/ghosting at others. */
+.hero-text-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("img/hero-text-mask.png");
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: cover;
 }
 #netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 
@@ -219,25 +235,6 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .hero-name .t-zh {
   font-family: '华文行楷', 'STXingkai', var(--font-zh);
   font-weight: 400;
-}
-.hero-seal {
-  position: absolute;
-  right: -.08em;
-  bottom: .02em;
-  display: grid;
-  place-items: center;
-  width: .62em;
-  height: .62em;
-  font-family: var(--font-zh);
-  font-size: .32em;
-  font-weight: 700;
-  color: rgba(243,239,222,.92);
-  background: #A8241F;
-  border: 1.5px solid rgba(243,239,222,.5);
-  border-radius: 3px;
-  transform: rotate(-7deg);
-  box-shadow: 0 4px 14px rgba(0,0,0,.45);
-  letter-spacing: 0;
 }
 .hero-tagline {
   margin-top: 1.4rem;
@@ -524,6 +521,17 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   .nav-links a { font-size: .95rem; letter-spacing: .06em; }
   .nav-name { display: none; }
   .sec-note { white-space: normal; }
+  /* At narrow/tall aspect ratios, background-size:cover crops hero-cover.jpg
+     very differently from the ~2:1 landscape ratio it was authored for —
+     the text-safety mask (sized via the same cover-fit transform) ends up
+     covering only a sliver of the viewport, letting baked city labels
+     bleed into the live text. Fall back to a solid, non-image scrim here:
+     reliable legibility matters more than seeing the map through the text
+     column on a phone, and the canvas glow/arcs still read fine above it. */
+  .hero-text-mask {
+    background-image: none;
+    background: linear-gradient(90deg, var(--ink) 0%, var(--ink) 70%, rgba(28,20,13,.85) 85%, rgba(28,20,13,.5) 100%);
+  }
 }
 @media (max-width: 560px) {
   .about-facts li { grid-template-columns: 1fr; gap: .2rem; }
