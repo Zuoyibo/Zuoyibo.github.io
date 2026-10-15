@@ -407,6 +407,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .tl-journal { margin-top: .45rem; font-size: .92rem; color: var(--text-soft); display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 .journal-tag { display: inline-block; background: var(--ink-2); color: var(--cream); font-size: .82rem; font-weight: 600; letter-spacing: .06em; padding: .18rem .6rem; border-radius: 3px; }
 .journal-tag-soft { background: var(--brand-tint); color: var(--brand); font-weight: 700; }
+.journal-tag-mid { background: #DDCEBD; color: var(--brand-deep); font-weight: 700; }
 .tag-strong { font-weight: 700; }
 
 /* work in progress */
