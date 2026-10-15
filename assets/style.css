@@ -216,7 +216,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 }
 .hero-desc {
   margin-top: 1.3rem;
-  max-width: 820px;
+  max-width: 935px;
   font-size: clamp(.85rem, 2.4vw, 1.55rem);
   letter-spacing: .06em;
   color: var(--text-soft);
