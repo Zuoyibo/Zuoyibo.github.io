@@ -62,14 +62,14 @@
   /* ── 4. Hero canvas: global research network ────────── */
   var NODES = [
     /* gold = emphasized hubs (home base + flagship ties) */
-    { en: 'Beijing',   zh: '北京',   fx: 0.8303, fy: 0.3213, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
-    { en: 'London',    zh: '伦敦',   fx: 0.4848, fy: 0.2469, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
-    { en: 'Jakarta',   zh: '雅加达', fx: 0.8089, fy: 0.5829, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Beijing',   zh: '北京',   fx: 0.8315, fy: 0.3360, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
+    { en: 'London',    zh: '伦敦',   fx: 0.4837, fy: 0.2593, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
+    { en: 'Jakarta',   zh: '雅加达', fx: 0.8134, fy: 0.5547, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
     /* blue = secondary ties */
-    { en: 'Guangzhou', zh: '广州',   fx: 0.8320, fy: 0.3980, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
-    { en: 'Shenzhen',  zh: '深圳',   fx: 0.8315, fy: 0.4318, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
-    { en: 'Singapore', zh: '新加坡', fx: 0.8106, fy: 0.5299, accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
-    { en: 'Sydney',    zh: '悉尼',   fx: 0.9510, fy: 0.7182, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
+    { en: 'Guangzhou', zh: '广州',   fx: 0.8427, fy: 0.4070, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Shenzhen',  zh: '深圳',   fx: 0.8326, fy: 0.4464, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
+    { en: 'Singapore', zh: '新加坡', fx: 0.7914, fy: 0.5051, accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
+    { en: 'Sydney',    zh: '悉尼',   fx: 0.9639, fy: 0.7407, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
   ];
   /* Node fx/fy are pixel fractions measured directly from hero-cover.jpg's
      own city-glow dots (not real geographic lon/lat) so the live canvas
@@ -194,7 +194,7 @@
            label visible; we only add an (English) label there in EN mode,
            offset BELOW the dot so it never sits on the baked Chinese text. */
         var lc = c.lab || {};
-        var inMaskedZone = c.fx < 0.78 && c.fy > 0.30 && c.fy < 0.85;
+        var inMaskedZone = c.fx < 0.72 && c.fy > 0.36 && c.fy < 0.86;
         if (!lc.hide && (lang === 'en' || inMaskedZone)) {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
           ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
