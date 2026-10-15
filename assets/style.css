@@ -182,7 +182,7 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--ink) 0%, var(--ink) 68%, rgba(28,20,13,.98) 76%, rgba(28,20,13,.65) 83%, transparent 92%),
+    linear-gradient(90deg, var(--ink) 0%, var(--ink) 66%, transparent 75%),
     linear-gradient(180deg, var(--ink) 0, var(--ink) 90px, transparent 170px),
     linear-gradient(0deg, var(--ink) 0, var(--ink) 150px, transparent 250px);
 }

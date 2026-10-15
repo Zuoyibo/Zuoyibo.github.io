@@ -62,38 +62,43 @@
   /* ── 4. Hero canvas: global research network ────────── */
   var NODES = [
     /* gold = emphasized hubs (home base + flagship ties) */
-    { en: 'Beijing',   zh: '北京',   lon: 116.40, lat: 39.90, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
-    { en: 'London',    zh: '伦敦',   lon: -0.13,  lat: 51.51, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
-    { en: 'Jakarta',   zh: '雅加达', lon: 106.85, lat: -6.21, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Beijing',   zh: '北京',   fx: 0.8303, fy: 0.3213, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
+    { en: 'London',    zh: '伦敦',   fx: 0.4848, fy: 0.2469, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
+    { en: 'Jakarta',   zh: '雅加达', fx: 0.8089, fy: 0.5829, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
     /* blue = secondary ties */
-    { en: 'Guangzhou', zh: '广州',   lon: 113.26, lat: 23.13, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
-    { en: 'Shenzhen',  zh: '深圳',   lon: 114.06, lat: 22.54, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
-    { en: 'San Francisco',  zh: '旧金山', lon: -122.42, lat: 37.77, accent: 'blue', lab: { hide: true } },
-    { en: 'Washington, DC', zh: '华盛顿', lon: -77.04, lat: 38.91,  accent: 'blue', lab: { hide: true } },
-    { en: 'Singapore', zh: '新加坡', lon: 103.82, lat: 1.35,   accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
-    { en: 'Sydney',    zh: '悉尼',   lon: 151.21, lat: -33.87, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
+    { en: 'Guangzhou', zh: '广州',   fx: 0.8320, fy: 0.3980, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Shenzhen',  zh: '深圳',   fx: 0.8315, fy: 0.4318, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
+    { en: 'Singapore', zh: '新加坡', fx: 0.8106, fy: 0.5299, accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
+    { en: 'Sydney',    zh: '悉尼',   fx: 0.9510, fy: 0.7182, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
   ];
+  /* Node fx/fy are pixel fractions measured directly from hero-cover.jpg's
+     own city-glow dots (not real geographic lon/lat) so the live canvas
+     overlay lands exactly on the backdrop art regardless of viewport size. */
   var ARCS = [
-    [3, 7], [3, 2], [3, 8],   // Guangzhou: diaspora & firm-internationalization routes
-    [0, 6], [0, 1],           // Beijing: industrial-policy research ties
-    [4, 5]                    // Shenzhen: AI / innovation tie to the Bay Area
+    [0, 1],   // Beijing - London
+    [0, 6],   // Beijing - Sydney
+    [3, 5],   // Guangzhou - Singapore
+    [3, 2]    // Guangzhou - Jakarta
   ];
 
   var canvas = document.getElementById('netCanvas');
-  if (canvas && window.MAP_DOTS) {
+  if (canvas) {
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0, dpr = 1, rafId = null, running = false;
     var particles = [];
+    var IMG_W = 1774, IMG_H = 887;
 
-    function project(lon, lat) {
-      var mx = W * 0.05, my = H * 0.1;
-      return [
-        mx + (lon + 180) / 360 * (W - 2 * mx),
-        my + (90 - lat) / 180 * (H - 2 * my)
-      ];
+    function project(fx, fy) {
+      /* Replicates CSS background-size:cover; background-position:center right
+         for hero-cover.jpg, so canvas points track the backdrop image exactly. */
+      var scale = Math.max(W / IMG_W, H / IMG_H);
+      var scaledW = IMG_W * scale, scaledH = IMG_H * scale;
+      var offsetX = W - scaledW;
+      var offsetY = (H - scaledH) / 2;
+      return [offsetX + fx * scaledW, offsetY + fy * scaledH];
     }
     function arcPath(a, b) {
-      var p1 = project(a.lon, a.lat), p2 = project(b.lon, b.lat);
+      var p1 = project(a.fx, a.fy), p2 = project(b.fx, b.fy);
       var dx = p2[0] - p1[0], dy = p2[1] - p1[1];
       var dist = Math.sqrt(dx * dx + dy * dy);
       var lift = Math.min(dist * 0.26, H * 0.16) + 12;
@@ -108,21 +113,12 @@
     }
 
     var geos = [];
-    var dotVariants = [];
     function rebuild() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = canvas.clientWidth; H = canvas.clientHeight;
       canvas.width = W * dpr; canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       geos = ARCS.map(function (pr) { return arcPath(NODES[pr[0]], NODES[pr[1]]); });
-      if (!dotVariants.length) {
-        var dots0 = window.MAP_DOTS;
-        for (var v = 0; v < dots0.length; v++) {
-          /* deterministic pseudo-random city-light texture: varies size/brightness per dot */
-          var h = Math.sin(v * 12.9898) * 43758.5453; h -= Math.floor(h);
-          dotVariants.push(h);
-        }
-      }
       particles = [];
       ARCS.forEach(function (pr, i) {
         var n = geos[i].len > 420 ? 2 : 1;
@@ -140,27 +136,6 @@
     function drawFrame(time) {
       ctx.clearRect(0, 0, W, H);
       var lang = currentLang();
-
-      var dots = window.MAP_DOTS;
-      for (var i = 0; i < dots.length; i++) {
-        var p = project(dots[i][0], dots[i][1]);
-        var v = dotVariants[i] || 0;
-        var sz = 1.1 + v * 1.5;
-        ctx.fillStyle = 'rgba(232,178,58,' + (0.1 + v * 0.3).toFixed(3) + ')';
-        ctx.fillRect(p[0], p[1], sz, sz);
-      }
-      if (time) {
-        ctx.fillStyle = 'rgba(247,214,140,.55)';
-        for (var s = 0; s < dots.length; s += 29) {
-          var ph = (time * 0.00032 + s) % 1;
-          var a = Math.sin(ph * Math.PI);
-          if (a <= 0.05) continue;
-          ctx.globalAlpha = a * 0.65;
-          var q = project(dots[s][0], dots[s][1]);
-          ctx.fillRect(q[0], q[1], 2, 2);
-        }
-        ctx.globalAlpha = 1;
-      }
 
       ctx.save();
       ctx.strokeStyle = 'rgba(232,178,58,.4)';
@@ -200,7 +175,7 @@
       });
 
       NODES.forEach(function (c) {
-        var p = project(c.lon, c.lat);
+        var p = project(c.fx, c.fy);
         var isGold = c.accent === 'gold';
         ctx.save();
         ctx.shadowColor = isGold ? 'rgba(232,178,58,.95)' : 'rgba(93,211,255,.85)';
@@ -211,14 +186,25 @@
         ctx.fill();
         ctx.restore();
         /* City-name labels are baked into the hero-cover.jpg backdrop
-           (Chinese). Only draw our own (English) label in EN mode, so the
-           default Chinese view stays clean with no duplicate text. */
+           (Chinese, drawn beside each dot) for nodes on the right ~2/3 of
+           the image. Nodes further left fall inside the text-safety mask
+           that hides the backdrop there, so we draw our own label for
+           those regardless of language. On the unmasked right side we only
+           draw (English) in EN mode, offset BELOW the dot so it never
+           sits directly on the baked Chinese text. */
         var lc = c.lab || {};
-        if (!lc.hide && lang === 'en') {
+        var inMaskedZone = c.fx < 0.68;
+        if (!lc.hide && (lang === 'en' || inMaskedZone)) {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
           ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
-          ctx.textAlign = lc.a || 'start';
-          ctx.fillText(c.en.toUpperCase(), p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
+          var text = lang === 'zh' ? c.zh : c.en.toUpperCase();
+          if (inMaskedZone) {
+            ctx.textAlign = lc.a || 'start';
+            ctx.fillText(text, p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
+          } else {
+            ctx.textAlign = 'center';
+            ctx.fillText(text, p[0], p[1] + 17);
+          }
           ctx.textAlign = 'start';
         }
       });
