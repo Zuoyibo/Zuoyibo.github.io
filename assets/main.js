@@ -210,12 +210,15 @@
         ctx.arc(p[0], p[1], isGold ? 3.4 : 2.4, 0, 6.2832);
         ctx.fill();
         ctx.restore();
+        /* City-name labels are baked into the hero-cover.jpg backdrop
+           (Chinese). Only draw our own (English) label in EN mode, so the
+           default Chinese view stays clean with no duplicate text. */
         var lc = c.lab || {};
-        if (!lc.hide) {
+        if (!lc.hide && lang === 'en') {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
           ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
           ctx.textAlign = lc.a || 'start';
-          ctx.fillText(lang === 'zh' ? c.zh : c.en.toUpperCase(), p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
+          ctx.fillText(c.en.toUpperCase(), p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
           ctx.textAlign = 'start';
         }
       });
