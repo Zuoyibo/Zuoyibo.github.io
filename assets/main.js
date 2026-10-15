@@ -62,14 +62,14 @@
   /* ── 4. Hero canvas: global research network ────────── */
   var NODES = [
     /* gold = emphasized hubs (home base + flagship ties) */
-    { en: 'Beijing',   zh: '北京',   fx: 0.8315, fy: 0.3360, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
-    { en: 'London',    zh: '伦敦',   fx: 0.4837, fy: 0.2593, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
-    { en: 'Jakarta',   zh: '雅加达', fx: 0.8134, fy: 0.5547, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Beijing',   zh: '北京',   fx: 0.8315, fy: 0.3360, accent: 'gold' },
+    { en: 'London',    zh: '伦敦',   fx: 0.4837, fy: 0.2593, accent: 'gold' },
+    { en: 'Jakarta',   zh: '雅加达', fx: 0.8134, fy: 0.5547, accent: 'gold' },
     /* blue = secondary ties */
-    { en: 'Guangzhou', zh: '广州',   fx: 0.8427, fy: 0.4070, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
-    { en: 'Shenzhen',  zh: '深圳',   fx: 0.8326, fy: 0.4464, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
-    { en: 'Singapore', zh: '新加坡', fx: 0.7914, fy: 0.5051, accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
-    { en: 'Sydney',    zh: '悉尼',   fx: 0.9639, fy: 0.7407, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
+    { en: 'Guangzhou', zh: '广州',   fx: 0.8427, fy: 0.4070, accent: 'blue' },
+    { en: 'Shenzhen',  zh: '深圳',   fx: 0.8326, fy: 0.4464, accent: 'blue' },
+    { en: 'Singapore', zh: '新加坡', fx: 0.7914, fy: 0.5051, accent: 'blue' },
+    { en: 'Sydney',    zh: '悉尼',   fx: 0.9639, fy: 0.7407, accent: 'blue' }
   ];
   /* Node fx/fy are pixel fractions measured directly from hero-cover.jpg's
      own city-glow dots (not real geographic lon/lat) so the live canvas
@@ -87,13 +87,14 @@
     var W = 0, H = 0, dpr = 1, rafId = null, running = false;
     var particles = [];
     var IMG_W = 1774, IMG_H = 887;
+    var HERO_POS_X = 0.30; // must match .hero-bg's background-position-x (30%)
 
     function project(fx, fy) {
-      /* Replicates CSS background-size:cover; background-position:center right
+      /* Replicates CSS background-size:cover; background-position:30% center
          for hero-cover.jpg, so canvas points track the backdrop image exactly. */
       var scale = Math.max(W / IMG_W, H / IMG_H);
       var scaledW = IMG_W * scale, scaledH = IMG_H * scale;
-      var offsetX = W - scaledW;
+      var offsetX = (W - scaledW) * HERO_POS_X;
       var offsetY = (H - scaledH) / 2;
       return [offsetX + fx * scaledW, offsetY + fy * scaledH];
     }
@@ -130,6 +131,28 @@
             trail: []
           });
         }
+      });
+      positionHeroHits();
+    }
+
+    /* CTA hit-areas: positioned (not drawn) to sit exactly over the
+       "进入研究"/"下载简历" buttons baked into hero-cover.jpg, measured
+       directly from the image in the same fx/fy pixel-fraction space as
+       the canvas nodes, via the same cover-fit project(). */
+    var BUTTONS = {
+      heroCtaResearch: { fx0: 0.1437, fy0: 0.7621, fx1: 0.2649, fy1: 0.8343 },
+      heroCtaCV:       { fx0: 0.2847, fy0: 0.7621, fx1: 0.4071, fy1: 0.8343 }
+    };
+    function positionHeroHits() {
+      Object.keys(BUTTONS).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var b = BUTTONS[id];
+        var p1 = project(b.fx0, b.fy0), p2 = project(b.fx1, b.fy1);
+        el.style.left = p1[0] + 'px';
+        el.style.top = p1[1] + 'px';
+        el.style.width = (p2[0] - p1[0]) + 'px';
+        el.style.height = (p2[1] - p1[1]) + 'px';
       });
     }
 
@@ -186,26 +209,15 @@
         ctx.fill();
         ctx.restore();
         /* City-name labels are baked into the hero-cover.jpg backdrop
-           (Chinese, drawn beside each dot). The text-safety mask only
-           covers a specific box in the image (roughly fx<0.8, fy 0.33-0.82
-           — see hero-text-mask.png) that hides the backdrop there, so we
-           draw our own label for nodes inside that box regardless of
-           language. Nodes outside the mask box keep their baked Chinese
-           label visible; we only add an (English) label there in EN mode,
-           offset BELOW the dot so it never sits on the baked Chinese text. */
-        var lc = c.lab || {};
-        var inMaskedZone = c.fx < 0.72 && c.fy > 0.36 && c.fy < 0.86;
-        if (!lc.hide && (lang === 'en' || inMaskedZone)) {
+           (Chinese, drawn beside each dot) — nothing masks the backdrop
+           anymore, so the baked label always shows. In EN mode we add our
+           own English label below the dot, clear of the baked Chinese
+           text beside it. */
+        if (lang === 'en') {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
           ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
-          var text = lang === 'zh' ? c.zh : c.en.toUpperCase();
-          if (inMaskedZone) {
-            ctx.textAlign = lc.a || 'start';
-            ctx.fillText(text, p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
-          } else {
-            ctx.textAlign = 'center';
-            ctx.fillText(text, p[0], p[1] + 17);
-          }
+          ctx.textAlign = 'center';
+          ctx.fillText(c.en.toUpperCase(), p[0], p[1] + 17);
           ctx.textAlign = 'start';
         }
       });

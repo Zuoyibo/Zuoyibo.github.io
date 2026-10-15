@@ -171,7 +171,12 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   inset: 0;
   background-image: url("img/hero-cover.jpg");
   background-repeat: no-repeat;
-  background-position: center right;
+  /* 30% (not "right") keeps the name/buttons column — which sits around
+     the image's own 10-40% width, not its center — in view across common
+     16:9/16:10 laptop ratios, not just the ~2:1 ratio the image was
+     authored at. See HERO_POS_X in main.js: the canvas/button-hit math
+     must mirror this exact value. */
+  background-position: 30% center;
   background-size: cover;
 }
 /* Nav/button safety bars: full-width, since the nav and scroll-cue span
@@ -182,27 +187,37 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   inset: 0;
   background:
     linear-gradient(180deg, var(--ink) 0, var(--ink) 90px, transparent 170px),
-    linear-gradient(0deg, var(--ink) 0, var(--ink) 150px, transparent 250px);
-}
-/* Text-safety mask: a pixel mask baked in hero-cover.jpg's own 1774x887
-   coordinate space (solid over where that image's own text/UI pixels are,
-   fading out beyond), sized with the exact same background-size:cover;
-   background-position:center right as .hero-bg. Because it goes through
-   the identical cover-fit transform, it tracks the backdrop image's own
-   content at any viewport size — unlike a mask sized from .hero-inner's
-   independently-centered CSS box, which only coincidentally lined up at
-   one viewport width and left gaps/ghosting at others. */
-.hero-text-mask {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image: url("img/hero-text-mask.png");
-  background-repeat: no-repeat;
-  background-position: center right;
-  background-size: cover;
+    linear-gradient(0deg, var(--ink) 0, var(--ink) 60px, transparent 120px);
 }
 #netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+/* Screen-reader-only: the name/tagline/desc live in the DOM for
+   accessibility, SEO, and language switching, but hero-cover.jpg already
+   renders that content visually (baked in), so we don't paint it twice. */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* CTA hit-areas: invisible, positioned by JS (see main.js) to sit exactly
+   over the "进入研究"/"下载简历" buttons already drawn into hero-cover.jpg,
+   using the same cover-fit math as the canvas overlay. Real, accessible
+   links — just visually blended with the backdrop art instead of redrawn. */
+.hero-cta-overlay { position: absolute; inset: 0; z-index: 2; }
+.hero-hit {
+  position: absolute;
+  display: block;
+  color: transparent;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.hero-hit:hover, .hero-hit:focus-visible { background: rgba(255,255,255,.1); }
+.hero-hit:focus-visible { outline: 1px solid rgba(243,239,222,.6); outline-offset: 2px; }
 
 .hero-inner {
   position: relative;
@@ -252,29 +267,6 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   letter-spacing: .06em;
   color: rgba(243,239,222,.72);
 }
-.hero-cta { margin-top: 2.6rem; display: flex; gap: 1rem; flex-wrap: wrap; }
-.btn {
-  display: inline-block;
-  text-decoration: none;
-  font-size: .95rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  padding: .95rem 2.1rem;
-  border-radius: 3px;
-  transition: transform .25s, background .25s, border-color .25s, box-shadow .25s;
-}
-.btn-solid {
-  background: var(--brand);
-  color: var(--cream);
-  border: 1px solid var(--brand);
-  box-shadow: 0 6px 24px rgba(74,46,23,.4);
-}
-.btn-solid:hover { background: var(--brand-deep); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(74,46,23,.5); }
-.btn-arrow { display: inline-block; margin-left: .5em; transition: transform .25s; }
-.btn-solid:hover .btn-arrow { transform: translateX(4px); }
-.btn-ghost:hover .btn-arrow { transform: translateY(2px); }
-.btn-ghost { border: 1px solid rgba(243,239,222,.38); color: var(--cream); background: transparent; }
-.btn-ghost:hover { background: rgba(243,239,222,.08); border-color: var(--cream); transform: translateY(-2px); }
 .hero-scroll {
   position: absolute;
   left: 50%; bottom: 2rem;
@@ -522,17 +514,70 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   .nav-name { display: none; }
   .sec-note { white-space: normal; }
   /* At narrow/tall aspect ratios, background-size:cover crops hero-cover.jpg
-     very differently from the ~2:1 landscape ratio it was authored for —
-     the text-safety mask (sized via the same cover-fit transform) ends up
-     covering only a sliver of the viewport, letting baked city labels
-     bleed into the live text. Fall back to a solid, non-image scrim here:
-     reliable legibility matters more than seeing the map through the text
-     column on a phone, and the canvas glow/arcs still read fine above it. */
-  .hero-text-mask {
-    background-image: none;
-    background: linear-gradient(90deg, var(--ink) 0%, var(--ink) 70%, rgba(28,20,13,.85) 85%, rgba(28,20,13,.5) 100%);
+     very differently from the ~2:1 landscape ratio it was authored for — the
+     whole left column (name/tagline/desc/buttons, baked into the image) gets
+     cropped off-screen entirely, taking the invisible CTA hit-areas with it.
+     Below this breakpoint we stop relying on the backdrop for that content:
+     restore the live text as real, visible, independently-laid-out HTML
+     (not tied to the image's crop), with its own scrim and styled buttons,
+     and hide the image-positioned hit-area overlay. */
+  .hero-inner {
+    position: relative !important;
+    width: 100% !important; height: auto !important;
+    max-width: 1140px;
+    margin: 0 auto !important;
+    padding: 7rem 1.5rem 5rem !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    color: var(--cream);
   }
+  .hero-inner::before {
+    content: '';
+    position: absolute;
+    inset: -1.5rem -1.5rem -1.5rem -1.5rem;
+    z-index: -1;
+    background: linear-gradient(180deg, var(--ink) 0%, var(--ink) 100%);
+  }
+  .hero-cta-overlay { display: none; }
+  .hero-cta-mobile { display: flex; }
 }
+/* hero-cover.jpg has no English variant of its baked-in text, so EN mode
+   always uses the live fallback too, regardless of viewport width. */
+body[data-lang="en"] .hero-inner {
+  position: relative !important;
+  width: 100% !important; height: auto !important;
+  max-width: 1140px;
+  margin: 0 auto !important;
+  padding: 7rem 1.5rem 5rem !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  color: var(--cream);
+}
+body[data-lang="en"] .hero-inner::before {
+  content: '';
+  position: absolute;
+  inset: -1.5rem -1.5rem -1.5rem -1.5rem;
+  z-index: -1;
+  background: linear-gradient(180deg, var(--ink) 0%, var(--ink) 100%);
+}
+body[data-lang="en"] .hero-cta-overlay { display: none; }
+body[data-lang="en"] .hero-cta-mobile { display: flex; }
+.hero-cta-mobile {
+  margin-top: 2.6rem; display: none; gap: 1rem; flex-wrap: wrap;
+}
+.hero-cta-mobile a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  padding: .9rem 1.8rem;
+  border-radius: 3px;
+}
+.hero-cta-mobile a:first-child { background: var(--brand); color: var(--cream); border: 1px solid var(--brand); }
+.hero-cta-mobile a:last-child { border: 1px solid rgba(243,239,222,.4); color: var(--cream); }
 @media (max-width: 560px) {
   .about-facts li { grid-template-columns: 1fr; gap: .2rem; }
   .nav-links a[href="#projects"], .nav-links a[href="#honors"] { display: none; }

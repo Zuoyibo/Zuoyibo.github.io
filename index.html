@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://zuoyibo.github.io/assets/img/avatar.jpg">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="10" fill="%236B4423"/%3E%3Ctext x="32" y="44" font-size="34" text-anchor="middle" fill="%23F3EEE3" font-family="serif" font-weight="bold"%3E左%3C/text%3E%3C/svg%3E'>
-<link rel="stylesheet" href="assets/style.css?v=27">
+<link rel="stylesheet" href="assets/style.css?v=28">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,29 +67,36 @@
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
   <div class="hero-bg" aria-hidden="true"></div>
-  <div class="hero-text-mask" aria-hidden="true"></div>
   <canvas id="netCanvas" aria-hidden="true"></canvas>
-  <div class="hero-inner">
-    <h1 class="hero-name reveal">
+  <div class="hero-inner sr-only">
+    <h1 class="hero-name">
       <span class="t-en">Yibo Zuo</span>
       <span class="t-zh">左毅博</span>
     </h1>
-    <p class="hero-tagline reveal">
+    <p class="hero-tagline">
       <span class="t-en">Innovation Economics · LLM-Based Tools &amp; Practice · Industrial Policy &amp; Innovation · Firm Internationalization</span>
       <span class="t-zh">创新经济学 · AI工具（LLM）应用与实践 · 产业政策与创新 · 企业出海</span>
     </p>
-    <p class="hero-desc reveal">
+    <p class="hero-desc">
       <span class="t-en">Ph.D. Candidate in Economics studying how industrial policy drives firms' substantive innovation, using large language models to identify and measure policy text at scale, with applications to firms' global expansion.</span>
       <span class="t-zh">经济学博士生，研究产业政策如何驱动企业的实质性创新，运用大语言模型对政策文本进行规模化识别与测量，并延伸至企业出海的国际化决策。</span>
     </p>
-    <div class="hero-cta reveal">
-      <a class="btn btn-solid" href="#research">
-        <span class="t-en">Explore Research</span><span class="t-zh">进入研究</span><span class="btn-arrow">→</span>
+    <div class="hero-cta-mobile">
+      <a href="#research">
+        <span class="t-en">Explore Research</span><span class="t-zh">进入研究</span>
       </a>
-      <a class="btn btn-ghost" href="assets/简历_左毅博_哈工深.pdf" target="_blank" rel="noopener">
-        <span class="t-en">Download CV</span><span class="t-zh">下载简历</span><span class="btn-arrow">↓</span>
+      <a href="assets/简历_左毅博_哈工深.pdf" target="_blank" rel="noopener">
+        <span class="t-en">Download CV</span><span class="t-zh">下载简历</span>
       </a>
     </div>
+  </div>
+  <div class="hero-cta-overlay" aria-hidden="false">
+    <a class="hero-hit" id="heroCtaResearch" href="#research">
+      <span class="t-en">Explore Research</span><span class="t-zh">进入研究</span>
+    </a>
+    <a class="hero-hit" id="heroCtaCV" href="assets/简历_左毅博_哈工深.pdf" target="_blank" rel="noopener">
+      <span class="t-en">Download CV</span><span class="t-zh">下载简历</span>
+    </a>
   </div>
   <a class="hero-scroll" href="#about" aria-label="Scroll down">
     <span class="t-en">Scroll</span><span class="t-zh">向下</span>
