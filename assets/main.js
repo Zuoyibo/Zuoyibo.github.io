@@ -61,22 +61,22 @@
 
   /* ── 4. Hero canvas: global research network ────────── */
   var NODES = [
-    /* hub = home base / policy & innovation centers (warm glow) */
-    { en: 'Guangzhou', zh: '广州',   lon: 113.26, lat: 23.13, hub: true,  lab: { a: 'start', dx: 8, dy: 4 } },
-    { en: 'Beijing',   zh: '北京',   lon: 116.40, lat: 39.90, hub: true,  lab: { a: 'start', dx: 8, dy: -8 } },
-    { en: 'Shenzhen',  zh: '深圳',   lon: 114.06, lat: 22.54, hub: true,  lab: { a: 'start', dx: 8, dy: 16 } },
-    /* destinations = diaspora / internationalization / policy-research ties */
-    { en: 'Singapore',      zh: '新加坡', lon: 103.82, lat: 1.35,   label: true, lab: { a: 'start', dx: 7, dy: 12 } },
-    { en: 'Jakarta',        zh: '雅加达', lon: 106.85, lat: -6.21,  label: true, lab: { a: 'start', dx: 7, dy: 3 } },
-    { en: 'San Francisco',  zh: '旧金山', lon: -122.42, lat: 37.77, label: true, lab: { hide: true } },
-    { en: 'Washington, DC', zh: '华盛顿', lon: -77.04, lat: 38.91,  label: true, lab: { hide: true } },
-    { en: 'London',         zh: '伦敦',   lon: -0.13,  lat: 51.51,  label: true, lab: { a: 'end', dx: -8, dy: -8 } },
-    { en: 'Sydney',         zh: '悉尼',   lon: 151.21, lat: -33.87, label: true, lab: { a: 'start', dx: 7, dy: 14 } }
+    /* gold = emphasized hubs (home base + flagship ties) */
+    { en: 'Beijing',   zh: '北京',   lon: 116.40, lat: 39.90, accent: 'gold', lab: { a: 'start', dx: 9, dy: -9 } },
+    { en: 'London',    zh: '伦敦',   lon: -0.13,  lat: 51.51, accent: 'gold', lab: { a: 'end', dx: -9, dy: -9 } },
+    { en: 'Jakarta',   zh: '雅加达', lon: 106.85, lat: -6.21, accent: 'gold', lab: { a: 'start', dx: 8, dy: 4 } },
+    /* blue = secondary ties */
+    { en: 'Guangzhou', zh: '广州',   lon: 113.26, lat: 23.13, accent: 'blue', lab: { a: 'start', dx: 8, dy: 4 } },
+    { en: 'Shenzhen',  zh: '深圳',   lon: 114.06, lat: 22.54, accent: 'blue', lab: { a: 'start', dx: 8, dy: 16 } },
+    { en: 'San Francisco',  zh: '旧金山', lon: -122.42, lat: 37.77, accent: 'blue', lab: { hide: true } },
+    { en: 'Washington, DC', zh: '华盛顿', lon: -77.04, lat: 38.91,  accent: 'blue', lab: { hide: true } },
+    { en: 'Singapore', zh: '新加坡', lon: 103.82, lat: 1.35,   accent: 'blue', lab: { a: 'start', dx: 7, dy: -9 } },
+    { en: 'Sydney',    zh: '悉尼',   lon: 151.21, lat: -33.87, accent: 'blue', lab: { a: 'start', dx: 7, dy: 14 } }
   ];
   var ARCS = [
-    [0, 3], [0, 4], [0, 8],   // Guangzhou: diaspora & firm-internationalization routes
-    [1, 6], [1, 7],           // Beijing: industrial-policy research ties
-    [2, 5]                    // Shenzhen: AI / innovation tie to the Bay Area
+    [3, 7], [3, 2], [3, 8],   // Guangzhou: diaspora & firm-internationalization routes
+    [0, 6], [0, 1],           // Beijing: industrial-policy research ties
+    [4, 5]                    // Shenzhen: AI / innovation tie to the Bay Area
   ];
 
   var canvas = document.getElementById('netCanvas');
@@ -108,12 +108,21 @@
     }
 
     var geos = [];
+    var dotVariants = [];
     function rebuild() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = canvas.clientWidth; H = canvas.clientHeight;
       canvas.width = W * dpr; canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       geos = ARCS.map(function (pr) { return arcPath(NODES[pr[0]], NODES[pr[1]]); });
+      if (!dotVariants.length) {
+        var dots0 = window.MAP_DOTS;
+        for (var v = 0; v < dots0.length; v++) {
+          /* deterministic pseudo-random city-light texture: varies size/brightness per dot */
+          var h = Math.sin(v * 12.9898) * 43758.5453; h -= Math.floor(h);
+          dotVariants.push(h);
+        }
+      }
       particles = [];
       ARCS.forEach(function (pr, i) {
         var n = geos[i].len > 420 ? 2 : 1;
@@ -132,33 +141,39 @@
       ctx.clearRect(0, 0, W, H);
       var lang = currentLang();
 
-      ctx.fillStyle = 'rgba(243,239,222,.12)';
       var dots = window.MAP_DOTS;
       for (var i = 0; i < dots.length; i++) {
         var p = project(dots[i][0], dots[i][1]);
-        ctx.fillRect(p[0], p[1], 1.5, 1.5);
+        var v = dotVariants[i] || 0;
+        var sz = 1.1 + v * 1.5;
+        ctx.fillStyle = 'rgba(232,178,58,' + (0.1 + v * 0.3).toFixed(3) + ')';
+        ctx.fillRect(p[0], p[1], sz, sz);
       }
       if (time) {
-        ctx.fillStyle = 'rgba(243,239,222,.26)';
-        for (var s = 0; s < dots.length; s += 41) {
-          var ph = (time * 0.00035 + s) % 1;
+        ctx.fillStyle = 'rgba(247,214,140,.55)';
+        for (var s = 0; s < dots.length; s += 29) {
+          var ph = (time * 0.00032 + s) % 1;
           var a = Math.sin(ph * Math.PI);
           if (a <= 0.05) continue;
-          ctx.globalAlpha = a * 0.5;
+          ctx.globalAlpha = a * 0.65;
           var q = project(dots[s][0], dots[s][1]);
-          ctx.fillRect(q[0], q[1], 1.8, 1.8);
+          ctx.fillRect(q[0], q[1], 2, 2);
         }
         ctx.globalAlpha = 1;
       }
 
-      ctx.strokeStyle = 'rgba(176,141,62,.22)';
-      ctx.lineWidth = 1;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(232,178,58,.4)';
+      ctx.lineWidth = 1.3;
+      ctx.shadowColor = 'rgba(232,178,58,.5)';
+      ctx.shadowBlur = 4;
       geos.forEach(function (g) {
         ctx.beginPath();
         ctx.moveTo(g.p1[0], g.p1[1]);
         ctx.quadraticCurveTo(g.cx, g.cy, g.p2[0], g.p2[1]);
         ctx.stroke();
       });
+      ctx.restore();
 
       particles.forEach(function (pt) {
         var g = geos[pt.g];
@@ -186,25 +201,19 @@
 
       NODES.forEach(function (c) {
         var p = project(c.lon, c.lat);
-        if (c.hub) {
-          ctx.save();
-          ctx.shadowColor = 'rgba(232,178,58,.9)';
-          ctx.shadowBlur = 10;
-          ctx.fillStyle = '#E8B23A';
-          ctx.beginPath();
-          ctx.arc(p[0], p[1], 3.2, 0, 6.2832);
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.fillStyle = 'rgba(243,239,222,.8)';
-          ctx.beginPath();
-          ctx.arc(p[0], p[1], 1.8, 0, 6.2832);
-          ctx.fill();
-        }
+        var isGold = c.accent === 'gold';
+        ctx.save();
+        ctx.shadowColor = isGold ? 'rgba(232,178,58,.95)' : 'rgba(93,211,255,.85)';
+        ctx.shadowBlur = isGold ? 11 : 7;
+        ctx.fillStyle = isGold ? '#E8B23A' : '#5DD3FF';
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], isGold ? 3.4 : 2.4, 0, 6.2832);
+        ctx.fill();
+        ctx.restore();
         var lc = c.lab || {};
-        if ((c.hub || c.label) && !lc.hide) {
+        if (!lc.hide) {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
-          ctx.fillStyle = c.hub ? 'rgba(243,239,222,.85)' : 'rgba(243,239,222,.45)';
+          ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
           ctx.textAlign = lc.a || 'start';
           ctx.fillText(lang === 'zh' ? c.zh : c.en.toUpperCase(), p[0] + (lc.dx != null ? lc.dx : 7), p[1] + (lc.dy != null ? lc.dy : 3));
           ctx.textAlign = 'start';

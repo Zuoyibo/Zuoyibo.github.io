@@ -170,6 +170,8 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   position: absolute;
   inset: 0;
   background:
+    linear-gradient(118deg, rgba(232,178,58,.16) 0%, transparent 28%),
+    linear-gradient(122deg, transparent 18%, rgba(232,178,58,.09) 24%, transparent 32%),
     radial-gradient(120% 90% at 85% 12%, rgba(176,141,62,.22), transparent 60%),
     radial-gradient(100% 70% at 8% 92%, rgba(107,68,35,.28), transparent 55%),
     radial-gradient(140% 100% at 50% 100%, rgba(0,0,0,.55), transparent 60%);
@@ -195,6 +197,8 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   margin-bottom: 1.6rem;
 }
 .hero-name {
+  position: relative;
+  display: inline-block;
   font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(3rem, 8.5vw, 6.4rem);
@@ -205,6 +209,25 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
 .hero-name .t-zh {
   font-family: '华文行楷', 'STXingkai', var(--font-zh);
   font-weight: 400;
+}
+.hero-seal {
+  position: absolute;
+  right: -.08em;
+  bottom: .02em;
+  display: grid;
+  place-items: center;
+  width: .62em;
+  height: .62em;
+  font-family: var(--font-zh);
+  font-size: .32em;
+  font-weight: 700;
+  color: rgba(243,239,222,.92);
+  background: #A8241F;
+  border: 1.5px solid rgba(243,239,222,.5);
+  border-radius: 3px;
+  transform: rotate(-7deg);
+  box-shadow: 0 4px 14px rgba(0,0,0,.45);
+  letter-spacing: 0;
 }
 .hero-tagline {
   margin-top: 1.4rem;
@@ -240,6 +263,9 @@ body[data-lang="zh"] .hero-name { letter-spacing: .06em; }
   box-shadow: 0 6px 24px rgba(74,46,23,.4);
 }
 .btn-solid:hover { background: var(--brand-deep); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(74,46,23,.5); }
+.btn-arrow { display: inline-block; margin-left: .5em; transition: transform .25s; }
+.btn-solid:hover .btn-arrow { transform: translateX(4px); }
+.btn-ghost:hover .btn-arrow { transform: translateY(2px); }
 .btn-ghost { border: 1px solid rgba(243,239,222,.38); color: var(--cream); background: transparent; }
 .btn-ghost:hover { background: rgba(243,239,222,.08); border-color: var(--cream); transform: translateY(-2px); }
 .hero-scroll {
