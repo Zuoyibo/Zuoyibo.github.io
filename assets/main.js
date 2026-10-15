@@ -186,14 +186,15 @@
         ctx.fill();
         ctx.restore();
         /* City-name labels are baked into the hero-cover.jpg backdrop
-           (Chinese, drawn beside each dot) for nodes on the right ~2/3 of
-           the image. Nodes further left fall inside the text-safety mask
-           that hides the backdrop there, so we draw our own label for
-           those regardless of language. On the unmasked right side we only
-           draw (English) in EN mode, offset BELOW the dot so it never
-           sits directly on the baked Chinese text. */
+           (Chinese, drawn beside each dot). The text-safety mask only
+           covers a specific box in the image (roughly fx<0.8, fy 0.33-0.82
+           — see hero-text-mask.png) that hides the backdrop there, so we
+           draw our own label for nodes inside that box regardless of
+           language. Nodes outside the mask box keep their baked Chinese
+           label visible; we only add an (English) label there in EN mode,
+           offset BELOW the dot so it never sits on the baked Chinese text. */
         var lc = c.lab || {};
-        var inMaskedZone = c.fx < 0.68;
+        var inMaskedZone = c.fx < 0.78 && c.fy > 0.30 && c.fy < 0.85;
         if (!lc.hide && (lang === 'en' || inMaskedZone)) {
           ctx.font = '600 10px Archivo, "Noto Sans SC", sans-serif';
           ctx.fillStyle = isGold ? 'rgba(247,214,140,.9)' : 'rgba(243,239,222,.55)';
