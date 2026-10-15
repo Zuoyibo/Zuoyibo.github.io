@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://zuoyibo.github.io/assets/img/avatar.jpg">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="10" fill="%236B4423"/%3E%3Ctext x="32" y="44" font-size="34" text-anchor="middle" fill="%23F3EEE3" font-family="serif" font-weight="bold"%3E左%3C/text%3E%3C/svg%3E'>
-<link rel="stylesheet" href="assets/style.css?v=21">
+<link rel="stylesheet" href="assets/style.css?v=22">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,77 +67,7 @@
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
   <div class="hero-bg" aria-hidden="true"></div>
-  <div class="hero-fx" aria-hidden="true">
-    <svg viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <defs>
-        <filter id="fxGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="2.2" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-        <linearGradient id="fxArcGradA" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#3fd0ff" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#3fd0ff" stop-opacity=".6"/>
-          <stop offset="100%" stop-color="#3fd0ff" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="fxArcGradB" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffbf5e" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#ffbf5e" stop-opacity=".55"/>
-          <stop offset="100%" stop-color="#ffbf5e" stop-opacity="0"/>
-        </linearGradient>
-        <clipPath id="fxScanClip"><rect x="1430" y="505" width="200" height="54" rx="4"/></clipPath>
-      </defs>
-
-      <!-- Firm internationalization: glowing flight paths with traveling packets -->
-      <g filter="url(#fxGlow)">
-        <path id="fxOrbitA" d="M 1445,505 Q 1340,330 1340,140" class="fx-arc-line fx-arc-cyan"/>
-        <path id="fxOrbitB" d="M 1480,560 Q 1540,700 1600,880" class="fx-arc-line fx-arc-amber" style="animation-delay:.6s"/>
-        <circle class="fx-dot fx-dot-cyan" r="4.5">
-          <animateMotion dur="6.5s" repeatCount="indefinite">
-            <mpath href="#fxOrbitA" xlink:href="#fxOrbitA"/>
-          </animateMotion>
-        </circle>
-        <circle class="fx-dot fx-dot-amber" r="4">
-          <animateMotion dur="6s" repeatCount="indefinite" begin="1.2s">
-            <mpath href="#fxOrbitB" xlink:href="#fxOrbitB"/>
-          </animateMotion>
-        </circle>
-      </g>
-
-      <!-- AI / LLM: hub-and-spoke pulsing network -->
-      <g class="fx-neural" filter="url(#fxGlow)">
-        <line x1="1230" y1="260" x2="1185" y2="215" class="fx-spoke" style="animation-delay:0s"/>
-        <line x1="1230" y1="260" x2="1285" y2="215" class="fx-spoke" style="animation-delay:.4s"/>
-        <line x1="1230" y1="260" x2="1185" y2="315" class="fx-spoke" style="animation-delay:.8s"/>
-        <line x1="1230" y1="260" x2="1285" y2="315" class="fx-spoke" style="animation-delay:1.2s"/>
-        <circle cx="1185" cy="215" r="4" class="fx-node" style="animation-delay:0s"/>
-        <circle cx="1285" cy="215" r="4" class="fx-node" style="animation-delay:.4s"/>
-        <circle cx="1185" cy="315" r="4" class="fx-node" style="animation-delay:.8s"/>
-        <circle cx="1285" cy="315" r="4" class="fx-node" style="animation-delay:1.2s"/>
-        <circle cx="1230" cy="260" r="7" class="fx-core"/>
-        <circle cx="1230" cy="260" r="7" class="fx-core-ring"/>
-      </g>
-
-      <!-- Industrial policy: scanning a policy document (LLM reading policy text) -->
-      <g class="fx-scan" filter="url(#fxGlow)">
-        <rect x="1430" y="505" width="200" height="54" rx="4" class="fx-scan-frame"/>
-        <path d="M1430,516 v-11 h11" class="fx-scan-corner"/>
-        <path d="M1619,516 v-11 h-11" class="fx-scan-corner"/>
-        <path d="M1430,548 v11 h11" class="fx-scan-corner"/>
-        <path d="M1619,548 v11 h-11" class="fx-scan-corner"/>
-        <line x1="1430" y1="505" x2="1630" y2="505" class="fx-scan-beam" clip-path="url(#fxScanClip)"/>
-      </g>
-
-      <!-- Innovation: radiating spark -->
-      <g class="fx-spark">
-        <circle cx="1420" cy="55" r="5" class="fx-spark-core"/>
-        <circle cx="1420" cy="55" r="5" class="fx-spark-ring"/>
-        <circle cx="1420" cy="55" r="5" class="fx-spark-ring fx-ring-delay"/>
-      </g>
-    </svg>
-  </div>
+  <canvas id="netCanvas" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <h1 class="hero-name reveal">
       <span class="t-en">Yibo Zuo</span>
@@ -462,6 +392,7 @@
   </div>
 </footer>
 
+<script src="assets/map-dots.js"></script>
 <script src="assets/main.js"></script>
 </body>
 </html>
